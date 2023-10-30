@@ -17,7 +17,6 @@ mandatory_tags= {
     'owner': 'frontend-team'
 }
 
-
 # create vpc
 vpc =  awsx.ec2.Vpc(
     resource_name= f'{project_name}-vpc',
@@ -38,6 +37,8 @@ vpc =  awsx.ec2.Vpc(
     tags= {
         'Name': f'{project_name}-vpc'
     }
+    #tags = dict(mandatory_tags, Name = f'{project_name}-security-group')
+
 )
 
 ## create a security group
@@ -56,6 +57,7 @@ web_security_group = aws.ec2.SecurityGroup(
     tags= {
         'Name': f'{project_name}-security-group'
     }
+    # tags = dict(mandatory_tags, Name = f'{project_name}-security-group')
 )
 
 ## create instances
@@ -80,7 +82,7 @@ for index in range(instance_count):
         tags={
             'Name': resource_name
         }
-
+        # tags = dict(mandatory_tags, Name = resource_name)
     )
  
 
