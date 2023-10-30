@@ -1,0 +1,5 @@
+config:
+  aws-community-day-infra:ami: "ami-0fc5d935ebf8bc3bc"
+  aws-community-day-infra:instanceCount: "2"
+  aws-community-day-infra:ssh_key: test-key
+  aws:region: us-east-1
