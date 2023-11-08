@@ -12,7 +12,7 @@ project_name = 'community-day-gt'
 config = pulumi.Config('aws-community-day-infra')
 
 mandatory_tags= {
-    'const-center': project_name,
+    'cost-center': project_name,
     'stack': 'demo-stack',
     'owner': 'frontend-team'
 }
