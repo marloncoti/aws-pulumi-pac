@@ -1,6 +1,8 @@
 import * as aws from "@pulumi/aws";
 import { PolicyPack, ReportViolation, validateResourceOfType } from "@pulumi/policy";
 
+const mandatoryTags = ['Name', 'cost-center', 'owner', 'stack']
+
 new PolicyPack("aws-typescript", {
     policies: [
         {
@@ -14,15 +16,17 @@ new PolicyPack("aws-typescript", {
             }),
         },
         {
-            name: "required-name-tag",
-            description: "A 'Name' tag is required.",
+            name: "required-mandatory-tags",
+            description: `Mandatory Tags are required [ ${mandatoryTags} ]`,
             enforcementLevel: "mandatory",
             validateResource: [
+
                 validateResourceOfType(aws.ec2.Instance, (instance, args, reportViolation) => {
-                    requireNameTag(instance.tags, reportViolation);
+                    requiredTags(instance.tags, reportViolation);
                 }),
+                
                 validateResourceOfType(aws.ec2.Vpc, (vpc, args, reportViolation) => {
-                    requireNameTag(vpc.tags, reportViolation);
+                    requiredTags(vpc.tags, reportViolation);
                 }),
             ],
         },
@@ -42,8 +46,11 @@ new PolicyPack("aws-typescript", {
 });
 
 
-function requireNameTag(tags: any, reportViolation: ReportViolation) {
-    if ((tags || {})["Names"] === undefined) {
-        reportViolation("A 'Names' tag is required.");
-    }
+function requiredTags(tags: any, reportViolation: ReportViolation) {
+
+    mandatoryTags.forEach(tagKey => {
+        if ((tags || {})[tagKey] === undefined) {
+            reportViolation(`A ${tagKey} tag is missing.`);
+        }
+    })
 }
